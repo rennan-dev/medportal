@@ -49,24 +49,38 @@ function cadastroPacienteForm(req, res) {
 function paginaHome(req, res) {
     const successMessage = req.session.successMessage || null;
     const userName = req.session.userName || 'Usuário';
+    const userId = req.session.userId; // Usuário logado
 
     // Consulta para buscar médicos e especialidades
-    const query = 'SELECT nome_completo, especialidade FROM medico_usuarios';
+    const queryMedicos = 'SELECT nome_completo, especialidade FROM medico_usuarios';
 
-    conexao.query(query, (error, results) => {
+    // Consulta para buscar os agendamentos do usuário logado com base no usuario_id
+    const queryAgendamentos = 'SELECT data, hora, medico_nome, status FROM agendamentos WHERE usuario_id = ?';
+
+    conexao.query(queryMedicos, (error, resultsMedicos) => {
         if (error) {
             console.error('Erro ao buscar lista de médicos:', error);
             return res.status(500).send('Erro ao buscar lista de médicos.');
         }
 
-        // Passar dados dos médicos e mensagens para o EJS
-        res.render('home', {
-            successMessage,
-            userName,
-            medicos: results // Lista de médicos com nome e especialidade
+        // Buscar os agendamentos do usuário com o userId
+        conexao.query(queryAgendamentos, [userId], (error, resultsAgendamentos) => {
+            if (error) {
+                console.error('Erro ao buscar agendamentos:', error);
+                return res.status(500).send('Erro ao buscar agendamentos.');
+            }
+
+            // Passar dados dos médicos, agendamentos e mensagens para o EJS
+            res.render('home', {
+                successMessage,
+                userName,
+                medicos: resultsMedicos,
+                agendamentos: resultsAgendamentos // Lista de agendamentos do usuário
+            });
         });
     });
 }
+
 
 function login(req, res) {
     const { email, password } = req.body;
@@ -214,9 +228,9 @@ function agendamentoForm(req, res) {
             return res.status(400).send('Já existe um agendamento nesse horário para esse médico.');
         }
 
-        // Inserir o novo agendamento no banco de dados
-        const insertQuery = 'INSERT INTO agendamentos (data, hora, medico_nome, paciente_nome, paciente_celular, status) VALUES (?, ?, ?, ?, ?, "agendado")';
-        conexao.query(insertQuery, [data, hora, medico_nome, nome_cliente, paciente_celular], (error, results) => {
+        // Inserir o novo agendamento no banco de dados, associando ao usuário logado
+        const insertQuery = 'INSERT INTO agendamentos (data, hora, medico_nome, paciente_nome, paciente_celular, usuario_id, status) VALUES (?, ?, ?, ?, ?, ?, "agendado")';
+        conexao.query(insertQuery, [data, hora, medico_nome, nome_cliente, paciente_celular, req.session.userId], (error, results) => {
             if (error) {
                 console.error('Erro ao agendar consulta:', error);
                 return res.status(500).send('Erro ao agendar consulta.');
@@ -227,6 +241,8 @@ function agendamentoForm(req, res) {
         });
     });
 }
+
+
 
 // Exportar funções
 module.exports = {

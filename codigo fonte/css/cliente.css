@@ -45,3 +45,47 @@
 #medicos-section tr:hover {
     background-color: #e6f7ff;
 }
+
+/* Estilos para o fieldset */
+fieldset {
+    border: 2px solid #ccc;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Estilo para o título do fieldset */
+legend {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+
+/* Estilo para a tabela dentro do fieldset */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* Estilo para as células da tabela */
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Estilo para o cabeçalho da tabela */
+th {
+    background-color: #f4f4f4;
+}
+
+/* Estilo para as linhas da tabela */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #eaeaea;
+}
