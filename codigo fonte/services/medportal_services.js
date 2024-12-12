@@ -21,10 +21,8 @@ function paginaCadastroMedico(req,res) {
 function cadastroPacienteForm(req, res) {
     console.log('Entrou em cadastroPacienteForm');
     
-    // Extrair dados do formulário
     const { name, email, phone, password, cpf } = req.body;
 
-    // Validação básica 
     if (!name || !email || !phone || !password || !cpf) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
@@ -37,47 +35,127 @@ function cadastroPacienteForm(req, res) {
             return res.status(500).send('Erro ao cadastrar usuário.');
         }
 
-        // Redirecionar para a página inicial com uma mensagem de sucesso
-        res.redirect('/home?success=true'); // Adiciona um parâmetro de consulta
+        // Salvar informações do usuário na sessão
+        req.session.userId = results.insertId; // ID gerado do novo usuário
+        req.session.userName = name; // Nome do usuário para exibição
+        req.session.userType = 'cliente';
+        req.session.successMessage = 'Usuário cadastrado com sucesso!';
+
+        // Redirecionar para a página home
+        res.redirect('/home');
     });
 }
 
-
 function paginaHome(req, res) {
-    // Captura a mensagem de sucesso da sessão
-    const successMessage = req.query.success ? 'Usuário cadastrado com sucesso!' : null;
-    
-    res.render('home', { successMessage }); // Passa a mensagem para a view home.ejs
+    const successMessage = req.session.successMessage || null;
+    const userName = req.session.userName || 'Usuário';
+
+    req.session.successMessage = null;
+
+    res.render('home', { successMessage, userName });
 }
+
 
 function login(req, res) {
     const { email, password } = req.body;
 
-    const query = 'SELECT * FROM usuarios WHERE email = ? AND senha = ?';
-    conexao.query(query, [email, password], (error, results) => {
+    // Consulta na tabela de clientes
+    const queryCliente = 'SELECT * FROM usuarios WHERE email = ? AND senha = ?';
+    conexao.query(queryCliente, [email, password], (error, resultsCliente) => {
         if (error) {
-            console.error('Erro ao buscar usuário:', error);
-            return res.status(500).send('Erro ao buscar usuário.');
+            console.error('Erro ao buscar usuário cliente:', error);
+            return res.status(500).send('Erro ao buscar usuário cliente.');
         }
 
-        if (results.length > 0) {
-            //usuário encontrado, armazena informações na sessão
-            req.session.userId = results[0].id; //armazena o ID do usuário na sessão
+        if (resultsCliente.length > 0) {
+            // Usuário cliente encontrado
+            req.session.userId = resultsCliente[0].id;
+            req.session.userName = resultsCliente[0].nome_completo;
+            req.session.userType = 'cliente'; // Define o tipo de usuário
             req.session.successMessage = 'Login realizado com sucesso!';
-            return res.redirect('/home'); 
-        } else {
-            return res.status(401).send('Email ou senha inválidos.');
+            return res.redirect('/home');
         }
+
+        // Caso não seja cliente, busca na tabela de médicos
+        const queryMedico = 'SELECT * FROM medico_usuarios WHERE email = ? AND senha = ?';
+        conexao.query(queryMedico, [email, password], (error, resultsMedico) => {
+            if (error) {
+                console.error('Erro ao buscar médico:', error);
+                return res.status(500).send('Erro ao buscar médico.');
+            }
+
+            if (resultsMedico.length > 0) {
+                // Médico encontrado
+                req.session.userId = resultsMedico[0].id;
+                req.session.userName = resultsMedico[0].nome_completo;
+                req.session.userType = 'medico'; // Define o tipo de usuário
+                req.session.successMessage = 'Login realizado com sucesso!';
+                return res.redirect('/home_medico');
+            }
+
+            // Email ou senha inválidos
+            return res.status(401).send('Email ou senha inválidos.');
+        });
     });
 }
+
 
 //função para verificar se o usuário está autenticado ou não
 function verificaAutenticacao(req, res, next) {
     if (req.session.userId) {
-        next(); // O usuário está autenticado, continua para a próxima função
+        if (req.session.userType === 'cliente' && req.originalUrl.startsWith('/home')) {
+            return next();
+        }
+        if (req.session.userType === 'medico' && req.originalUrl.startsWith('/home_medico')) {
+            return next();
+        }
+        // Redireciona para a página correta caso o tipo de usuário não corresponda à rota
+        return res.redirect(req.session.userType === 'cliente' ? '/home' : '/home_medico');
     } else {
         res.redirect('/login'); // Redireciona para a página de login se não estiver autenticado
     }
+}
+
+
+function cadastroMedicoForm(req, res) {
+    console.log('Entrou em cadastroMedicoForm');
+
+    const { name, email, phone, birthdate, crm, specialty, password } = req.body;
+
+    if (!name || !email || !phone || !birthdate || !crm || !specialty || !password) {
+        return res.status(400).send('Todos os campos são obrigatórios.');
+    }
+
+    const query = `
+        INSERT INTO medico_usuarios (nome_completo, email, telefone, data_nascimento, crm, especialidade, senha)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    conexao.query(query, [name, email, phone, birthdate, crm, specialty, password], (error, results) => {
+        if (error) {
+            console.error('Erro ao cadastrar médico:', error);
+            return res.status(500).send('Erro ao cadastrar médico.');
+        }
+
+        // Configurar sessão do usuário
+        req.session.userId = results.insertId; // ID do médico recém-cadastrado
+        req.session.userName = name; // Nome do médico para exibição
+        req.session.userType = 'medico'; // Tipo de usuário para controle de acesso
+        req.session.successMessage = 'Cadastro de médico realizado com sucesso!';
+
+        // Redirecionar para a página home_medico
+        res.redirect('/home_medico');
+    });
+}
+
+
+function paginaHomeMedico(req, res) {
+    const successMessage = req.session.successMessage || null;
+    const medicoName = req.session.medicoName || 'Médico';
+
+    req.session.successMessage = null;
+
+    res.render('home_medico', { successMessage, medicoName });
 }
 
 
@@ -91,5 +169,7 @@ module.exports = {
     cadastroPacienteForm,
     paginaHome,
     login,
-    verificaAutenticacao
+    verificaAutenticacao,
+    cadastroMedicoForm,
+    paginaHomeMedico
 };

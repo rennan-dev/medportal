@@ -65,8 +65,15 @@ router.post('/login', function(req, res) {
     servico.login(req, res);
 });
 
+//rota para cadastro de médicos
+router.post('/cadastroMedico', function(req, res) {
+    servico.cadastroMedicoForm(req, res);
+});
+
+//rota para página home_medico (após autenticação do médico)
+router.get('/home_medico', servico.verificaAutenticacao, function(req, res) {
+    servico.paginaHomeMedico(req, res);
+});
+
 // Exportar o router
 module.exports = router;
-
-// Ou se estiver usando CommonJS
-// module.exports = router; 
