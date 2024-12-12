@@ -18,14 +18,51 @@ router.use(session({
 const servico = require('../services/medportal_services');
 const conexao = require('../bd/conexao_mysql');
 
-// Defina suas rotas aqui
-router.get('/', (req, res) => {
-    res.send('Rota principal');
-});
-
 //rota de login no sistema
 router.get('/login', function(req,res) {
     servico.paginaLogin(req,res);
+});
+
+//rota feita para o usuário deslogar de forma segura do sistema
+router.get('/logout', function(req, res) {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Erro ao destruir a sessão:', err);
+            return res.status(500).send('Erro ao sair.');
+        }
+        res.redirect('/login'); 
+    });
+});
+
+//rota para cadastro do usuário comum no sistema
+router.get('/cadastro', function(req,res) {
+    servico.cadastroPaciente(req,res);
+});
+//rota para cadastro de usuário comum no sistema
+router.post('/cadastro', function(req, res) {
+    servico.cadastroPacienteForm(req, res);
+});
+
+//rota que mostra a tela inicial do sistema
+router.get('/index', function(req,res) {
+    servico.paginaInicial(req,res);
+});
+router.get('/', function(req,res) {
+    servico.paginaInicial(req,res);
+});
+
+//rota para a criação de um perfil de um profissional da saúde
+router.get('/cadastroMedico', function(req,res) {
+    servico.paginaCadastroMedico(req,res);
+});
+
+//redirecionado para a pagina home ao ser cadastrado ou feito login
+router.get('/home', servico.verificaAutenticacao, function(req, res) {
+    servico.paginaHome(req, res);
+});
+
+router.post('/login', function(req, res) {
+    servico.login(req, res);
 });
 
 // Exportar o router

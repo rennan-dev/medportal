@@ -11,9 +11,9 @@
         <h1>MedPortal - Login</h1>
         <nav>
             <ul>
-                <li><a href="/index.html">Início</a></li>
-                <li><a href="/cadastro.html">Cadastro</a></li>
-                <li><a href="/cadastroMedico.html">Cadastro Profissional da Saúde</a></li>
+                <li><a href="/index">Início</a></li>
+                <li><a href="/cadastro">Cadastro</a></li>
+                <li><a href="/cadastroMedico">Cadastro Profissional da Saúde</a></li>
                 <li><a href="/agendamento.html">Agendamento</a></li>
             </ul>
         </nav>
@@ -23,7 +23,7 @@
         <!-- Formulário de Login -->
         <section id="login-section" class="section">
             <h2>Login</h2>
-            <form id="login-form">
+            <form id="login-form" action="/login" method="POST">
                 <div class="form-group">
                     <label for="email">E-mail:</label>
                     <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
@@ -37,7 +37,7 @@
                 <button type="submit" class="btn-submit">Entrar</button>
             </form>
             <p class="no-account">
-                Não tem uma conta? <a href="/cadastro.html">Cadastre-se aqui</a>.
+                Não tem uma conta? <a href="/cadastro">Cadastre-se aqui</a>.
             </p>
         </section>
     </main>
@@ -45,39 +45,5 @@
     <footer>
         <p>MedPortal &copy; 2024. Todos os direitos reservados.</p>
     </footer>
-
-    <script>
-        const loginForm = document.getElementById("login-form");
-
-        // Função para processar o login
-        loginForm.addEventListener("submit", (event) => {
-            event.preventDefault(); // Evita o comportamento padrão do formulário
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            // Simulação de verificação de dados
-            const usuariosMedicos = [
-                { email: "medico1@exemplo.com", senha: "123456" }, // Exemplo de usuário médico cadastrado
-            ];
-
-            const medicoEncontrado = usuariosMedicos.find(
-                (medico) => medico.email === email && medico.senha === password
-            );
-
-            if (medicoEncontrado) {
-                // Login bem-sucedido
-                alert("Bem-vindo, médico!");
-                window.location.href = "/area-medico.html"; // Substitua pelo caminho correto
-            } else {
-                // Médico não encontrado, redireciona para cadastro
-                const cadastrar = confirm(
-                    "Médico não cadastrado. Deseja criar uma conta?"
-                );
-                if (cadastrar) {
-                    window.location.href = "/cadastroMedico.html";
-                }
-            }
-        });
-    </script>
 </body>
 </html>
