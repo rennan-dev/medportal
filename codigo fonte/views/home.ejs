@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./../css/cliente.css">
+</head>
+<body>
+    <header>
+        <h1>MedPortal - Home</h1>
+        <nav>
+            <ul>
+                <li><a href="/agendamento">Agendamento</a></li>
+                <li><a href="/logout" id="logout-btn">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="upload-section">
+            <h2>Home</h2>
+
+            <% if (successMessage) { %>
+                <script type="text/javascript">
+                    alert("<%= successMessage %>");
+                </script>
+            <% } %>
+
+        </section>
+
+        <section id="medicos-section">
+            <h2>Médicos Disponíveis</h2>
+        
+            <% if (medicos && medicos.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Médico</th>
+                            <th>Especialidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% medicos.forEach(medico => { %>
+                            <tr>
+                                <td><%= medico.nome_completo %></td>
+                                <td><%= medico.especialidade %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>Não há médicos cadastrados no momento.</p>
+            <% } %>
+        </section>
+
+        <section id="agendamentos-section">
+            <% if (agendamentos && agendamentos.length > 0) { %>
+                <fieldset>
+                    <legend>Meus Agendamento(s)</legend>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Médico</th>
+                                <th>Data e Hora</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% agendamentos.forEach(agendamento => { %>
+                                <tr>
+                                    <td><%= agendamento.medico_nome %></td>
+                                    <td>
+                                        <% 
+                                            
+                                            var hora = agendamento.hora.split(':'); // Supondo que agendamento.hora seja do tipo "10:00:00"
+                                            var horaFormatada = hora[0] + ':' + hora[1]; // Pega apenas as horas e minutos
+                                    
+                                            
+                                            var data = new Date(agendamento.data); // Cria um objeto Date
+                                            var dia = String(data.getDate()).padStart(2, '0'); // Pega o dia e adiciona zero à esquerda, se necessário
+                                            var mes = String(data.getMonth() + 1).padStart(2, '0'); // Pega o mês (lembrando que o mês começa em 0)
+                                            var ano = data.getFullYear(); // Pega o ano
+                                            var dataFormatada = dia + '/' + mes + '/' + ano; // Formata a data
+                                        %>
+                                        <%= horaFormatada %> - <%= dataFormatada %>
+                                    </td>
+                                    
+                                    <td><%= agendamento.status %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </fieldset>
+            <% } else { %>
+                <p>Você não possui agendamentos no momento.</p>
+            <% } %>
+        </section>
+        
+        
+    </main>
+
+    <footer>
+        <p>MedPortal &copy; 2024. Todos os direitos reservados.</p>
+    </footer>  
+    
+</body>
+</html>

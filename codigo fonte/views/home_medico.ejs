@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envio de Exames - MedPortal</title>
+    <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./../css/medico.css">
+</head>
+<body>
+    <header>
+        <h1>MedPortal - Home - Médicos</h1>
+        <nav>
+            <ul>
+                <li><a href="/logout" id="logout-btn">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="upload-section">
+            <h2>Agendamentos do Dr. <%= medicoName %></h2>
+
+            <% if (successMessage) { %>
+                <script type="text/javascript">
+                    alert("<%= successMessage %>");
+                </script>
+            <% } %>
+
+            <fieldset>
+                <legend>Lista de Agendamentos</legend>
+                <% if (agendamentos && agendamentos.length > 0) { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% agendamentos.forEach(function(agendamento) { %>
+                                <tr>
+                                    <td><%= agendamento.paciente_nome %></td>
+                                    <td><%= new Date(agendamento.data).toLocaleDateString('pt-BR') %></td>
+                                    <td><%= agendamento.hora %></td>
+                                    <td><%= agendamento.status %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>Não há agendamentos para hoje.</p>
+                <% } %>
+            </fieldset>
+        </section>
+    </main>
+
+    <footer>
+        <p>MedPortal &copy; 2024. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>

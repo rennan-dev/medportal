@@ -1,0 +1,61 @@
+/*estilos para a seção de agendamentos */
+#upload-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+#upload-section h2 {
+    font-size: 22px;
+    color: #007BFF;
+    margin-bottom: 20px;
+}
+
+/*estilo do campo fieldset */
+fieldset {
+    border: 2px solid #007BFF;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+legend {
+    font-weight: bold;
+    color: #007BFF;
+    font-size: 18px;
+}
+
+/*estilos da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+table th {
+    background-color: #007BFF;
+    color: white;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #e1f5fe;
+}
+
+/*mensagem quando não houver agendamentos */
+p {
+    color: #555;
+    font-size: 16px;
+    margin-top: 15px;
+}
