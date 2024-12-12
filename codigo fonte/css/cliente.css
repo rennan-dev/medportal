@@ -1,0 +1,91 @@
+#medicos-section {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#medicos-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#medicos-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#medicos-section th,
+#medicos-section td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+#medicos-section th {
+    background-color: #007BFF;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+#medicos-section td {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+#medicos-section tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#medicos-section tr:hover {
+    background-color: #e6f7ff;
+}
+
+/*estilos para o fieldset */
+fieldset {
+    border: 2px solid #ccc;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/*estilo para o título do fieldset */
+legend {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #333;
+}
+
+/*estilo para a tabela dentro do fieldset */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/*estilo para as células da tabela */
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/*estilo para o cabeçalho da tabela */
+th {
+    background-color: #f4f4f4;
+}
+
+/*estilo para as linhas da tabela */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #eaeaea;
+}

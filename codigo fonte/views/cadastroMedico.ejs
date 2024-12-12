@@ -11,14 +11,14 @@
         <h1>MedPortal - Login</h1>
         <nav>
             <ul>
-                <li><a href="/index.html">Início</a></li>
-                <li><a href="/cadastro.html">Cadastro</a></li>
-                <li><a href="/agendamento.html">Agendamento</a></li>
+                <li><a href="/index">Início</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/cadastro">Cadastro</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <form id="register-form">
+        <form id="register-form" action="/cadastroMedico" method="POST">
             <!-- Nome Completo -->
             <div class="form-group">
                 <label for="name">Nome Completo:</label>
@@ -84,22 +84,14 @@
     </footer>
 
     <script>
-        const form = document.getElementById("register-form");
-
-        // Validação de senha
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
-
+        document.getElementById("register-form").addEventListener("submit", function(event) {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
+            
             if (password !== confirmPassword) {
-                alert("As senhas não coincidem. Tente novamente.");
-                return;
+                alert("As senhas não coincidem. Por favor, verifique e tente novamente.");
+                event.preventDefault(); 
             }
-
-            alert("Médico cadastrado com sucesso!");
-            window.location.href = "/login.html";
         });
     </script>
 </body>

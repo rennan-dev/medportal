@@ -1,30 +1,34 @@
-// Importar módulo Express
+//importar módulo Express
 const express = require('express');
 
-// Importar módulo de rotas
+const flash = require('connect-flash');
+
+//importar módulo de rotas
 const system_routes = require('./routes/system_routes');
 
-// App
+//app
 const app = express();
 
-// Configurar EJS como o mecanismo de visualização
-app.set('view engine', 'ejs'); // Defina o mecanismo como EJS
-app.set('views', './views'); // Defina o diretório das views
+//configurando EJS como o mecanismo de visualização
+app.set('view engine', 'ejs'); //definindo o mecanismo como EJS
+app.set('views', './views'); //definindo o diretório das views
 
-// Adicionar CSS
+//adicionar CSS
 app.use('/css', express.static('./css'));
 
-// Referenciar a pasta de imagens
+//referenciar a pasta de imagens
 app.use('/img', express.static('./img'));
 
-// Manipulação de dados via rotas
+app.use(flash());
+
+//manipulação de dados via rotas
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Rotas
+//rotas
 app.use('/', system_routes);
 
-// Servidor
+//servidor
 app.listen(8080, () => {
     console.log('Servidor rodando na porta 8080');
 });
