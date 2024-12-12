@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envio de Exames - MedPortal</title>
+    <link rel="stylesheet" href="./../css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>MedPortal - Envio de Exames</h1>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Início</a></li>
+                <li><a href="/agendamento.html">Agendamento</a></li>
+                <li><a href="/envio-exames.html">Envio de Exames</a></li>
+                <li><a href="/login.html" id="logout-btn">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="upload-section">
+            <h2>Envio de Exames</h2>
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="exam-type">Tipo de Exame:</label>
+                    <select id="exam-type" name="exam-type" required>
+                        <option value="">Selecione</option>
+                        <option value="Sangue">Sangue</option>
+                        <option value="Urina">Urina</option>
+                        <option value="Imagem">Imagem (Raio-X, Ultrassom)</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exam-file">Arquivo do Exame:</label>
+                    <input type="file" id="exam-file" name="exam-file" accept=".pdf, .jpg, .png" required>
+                </div>
+
+                <button type="submit" id="upload-btn">Enviar Exame</button>
+            </form>
+
+            <p id="upload-status" class="hidden"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>MedPortal &copy; 2024. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

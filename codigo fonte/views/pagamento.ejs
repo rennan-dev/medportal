@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento - MedPortal</title>
+    <link rel="stylesheet" href="./../css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>MedPortal - Pagamento</h1>
+        <nav>
+            <ul>
+                <li><a href="/index.html">Início</a></li>
+                <li><a href="/cadastro.html">Cadastro</a></li>
+                <li><a href="/agendamento.html">Agendamento</a></li>
+                <li><a href="/pagamento.html">Pagamento</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="payment-section">
+            <h2>Detalhes do Pagamento</h2>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="name">Nome Completo:</label>
+                    <input type="text" id="name" name="name" required placeholder="Digite seu nome completo">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required placeholder="Digite seu e-mail">
+                </div>
+
+                <div class="form-group">
+                    <label for="card-number">Número do Cartão:</label>
+                    <input type="text" id="card-number" name="card-number" required placeholder="1234 5678 9123 4567" maxlength="19">
+                </div>
+
+                <div class="form-group">
+                    <label for="expiration-date">Data de Validade:</label>
+                    <input type="month" id="expiration-date" name="expiration-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" name="cvv" required placeholder="123" maxlength="3">
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Valor:</label>
+                    <input type="text" id="amount" name="amount" value="R$ 150,00" readonly>
+                </div>
+
+                <button type="submit" class="btn-submit">Pagar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>MedPortal &copy; 2024. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const paymentForm = document.getElementById("payment-form");
+        paymentForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Exibe uma mensagem de sucesso e redireciona para a página inicial
+            alert("Pagamento realizado com sucesso!");
+            window.location.href = "/index.html"; // Substitua pelo caminho da página inicial
+        });
+    </script>
+</body>
+</html>
