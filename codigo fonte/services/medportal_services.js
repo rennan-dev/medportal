@@ -68,8 +68,6 @@ function paginaHome(req, res) {
     });
 }
 
-
-
 function login(req, res) {
     const { email, password } = req.body;
 
@@ -113,7 +111,6 @@ function login(req, res) {
     });
 }
 
-
 //função para verificar se o usuário está autenticado ou não
 function verificaAutenticacao(req, res, next) {
     if (req.session.userId) {
@@ -129,7 +126,6 @@ function verificaAutenticacao(req, res, next) {
         res.redirect('/login'); // Redireciona para a página de login se não estiver autenticado
     }
 }
-
 
 function cadastroMedicoForm(req, res) {
     console.log('Entrou em cadastroMedicoForm');
@@ -171,8 +167,19 @@ function paginaHomeMedico(req, res) {
     res.render('home_medico', { successMessage, medicoName });
 }
 
-function paginaAgendamento(req,res) {
-    res.render('agendamento');
+function paginaAgendamento(req, res) {
+    // Consulta para buscar médicos e suas especialidades
+    const query = 'SELECT nome_completo, especialidade FROM medico_usuarios';
+
+    conexao.query(query, (error, results) => {
+        if (error) {
+            console.error('Erro ao buscar médicos:', error);
+            return res.status(500).send('Erro ao buscar médicos.');
+        }
+
+        // Passa a lista de médicos e especialidades para o EJS
+        res.render('agendamento', { medicos: results });
+    });
 }
 
 function verificaAutenticacaoCliente(req, res, next) {
@@ -184,6 +191,41 @@ function verificaAutenticacaoCliente(req, res, next) {
         req.flash('error', 'Você precisa estar logado como cliente para acessar essa página.');
         res.redirect('/login');
     }
+}
+
+function agendamentoForm(req, res) {
+    const { data, hora, nome_cliente, paciente_celular, medico_nome } = req.body;
+
+    // Verificar se todos os campos obrigatórios foram preenchidos
+    if (!data || !hora || !nome_cliente || !paciente_celular || !medico_nome) {
+        return res.status(400).send('Todos os campos são obrigatórios.');
+    }
+
+    // Verificar se o médico já tem um agendamento para esse horário
+    const checkQuery = 'SELECT * FROM agendamentos WHERE data = ? AND hora = ? AND medico_nome = ?';
+    conexao.query(checkQuery, [data, hora, medico_nome], (error, results) => {
+        if (error) {
+            console.error('Erro ao verificar agendamento:', error);
+            return res.status(500).send('Erro ao verificar agendamento.');
+        }
+
+        if (results.length > 0) {
+            // Já existe um agendamento nesse horário para o médico
+            return res.status(400).send('Já existe um agendamento nesse horário para esse médico.');
+        }
+
+        // Inserir o novo agendamento no banco de dados
+        const insertQuery = 'INSERT INTO agendamentos (data, hora, medico_nome, paciente_nome, paciente_celular, status) VALUES (?, ?, ?, ?, ?, "agendado")';
+        conexao.query(insertQuery, [data, hora, medico_nome, nome_cliente, paciente_celular], (error, results) => {
+            if (error) {
+                console.error('Erro ao agendar consulta:', error);
+                return res.status(500).send('Erro ao agendar consulta.');
+            }
+
+            // Redirecionar para uma página de sucesso ou mostrar confirmação
+            res.send('Agendamento confirmado com sucesso!');
+        });
+    });
 }
 
 // Exportar funções
@@ -199,5 +241,6 @@ module.exports = {
     cadastroMedicoForm,
     paginaHomeMedico,
     verificaAutenticacaoCliente,
-    paginaAgendamento
+    paginaAgendamento,
+    agendamentoForm
 };

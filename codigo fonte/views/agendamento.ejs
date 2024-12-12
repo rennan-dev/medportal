@@ -21,41 +21,39 @@
             <h2>Marque sua consulta</h2>
 
             <!-- Formulário de seleção -->
-            <label for="agendamento-date" class="agendamento-label">Selecione uma data:</label>
-            <input type="date" id="agendamento-date" class="agendamento-input" min="2024-01-01" max="2024-12-31" required>
-
-            <label for="agendamento-time" class="agendamento-label">Selecione um horário:</label>
-            <select id="agendamento-time" class="agendamento-input">
-                <option value="">Escolha um horário</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-            </select>
-
-            <label for="medico-especialidade" class="agendamento-label">Escolha a especialidade médica:</label>
-            <select id="medico-especialidade" class="agendamento-input">
-                <option value="">Selecione</option>
-                <option value="clinico-geral">Clínico Geral</option>
-                <option value="cardiologista">Cardiologista</option>
-                <option value="pediatra">Pediatra</option>
-                <option value="dermatologista">Dermatologista</option>
-                <option value="ortopedista">Ortopedista</option>
-            </select>
-
-            <h3>Dados do Paciente</h3>
-            <form id="client-form" class="agendamento-form">
+            <form action="/agendamento" method="POST" id="agendamento-form">
+                <label for="agendamento-date" class="agendamento-label">Selecione uma data:</label>
+                <input type="date" id="agendamento-date" name="data" class="agendamento-input" min="2024-01-01" max="2024-12-31" required>
+            
+                <label for="agendamento-time" class="agendamento-label">Selecione um horário:</label>
+                <select id="agendamento-time" name="hora" class="agendamento-input" required>
+                    <option value="">Escolha um horário</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                </select>
+            
+                <label for="medico-nome" class="agendamento-label">Escolha o médico:</label>
+                <select id="medico-nome" name="medico_nome" class="agendamento-input" required>
+                    <option value="">Selecione</option>
+                    <% medicos.forEach(medico => { %>
+                        <option value="<%= medico.nome_completo %>">Dr(a). <%= medico.nome_completo %></option>
+                    <% }) %>
+                </select>
+            
+                <h3>Dados do Paciente</h3>
                 <label for="client-name" class="agendamento-label">Nome:</label>
-                <input type="text" id="client-name" class="agendamento-input" placeholder="Seu nome" required>
-
+                <input type="text" id="client-name" name="nome_cliente" class="agendamento-input" placeholder="Seu nome" required>
+            
                 <label for="client-phone" class="agendamento-label">Número de Contato:</label>
-                <input type="tel" id="client-phone" class="agendamento-input" placeholder="(00) 00000-0000" required>
-
-                <button type="button" id="schedule-btn" class="agendamento-button">Confirmar Agendamento</button>
-            </form>
+                <input type="tel" id="client-phone" name="paciente_celular" class="agendamento-input" placeholder="00000000000" required>
+            
+                <button type="submit" class="agendamento-button">Confirmar Agendamento</button>
+            </form>            
         </section>
 
         <section id="agendamento-appointments" class="agendamento-section">
@@ -69,43 +67,5 @@
     <footer>
         <p>MedPortal &copy; 2024. Todos os direitos reservados.</p>
     </footer>
-
-    <script>
-        const appointmentsContainer = document.getElementById("appointments");
-        const scheduleBtn = document.getElementById("schedule-btn");
-
-        scheduleBtn.addEventListener("click", () => {
-            const date = document.getElementById("agendamento-date").value;
-            const time = document.getElementById("agendamento-time").value;
-            const specialty = document.getElementById("medico-especialidade").value;
-            const name = document.getElementById("client-name").value;
-            const phone = document.getElementById("client-phone").value;
-
-            if (date && time && specialty && name && phone) {
-                const appointmentHTML = `
-                    <div class="appointment">
-                        <p><strong>Data:</strong> ${date}</p>
-                        <p><strong>Horário:</strong> ${time}</p>
-                        <p><strong>Especialidade:</strong> ${specialty}</p>
-                        <p><strong>Paciente:</strong> ${name}</p>
-                        <p><strong>Contato:</strong> ${phone}</p>
-                        <button class="edit-btn">Editar</button>
-                    </div>
-                `;
-                appointmentsContainer.innerHTML = appointmentHTML;
-
-                const editBtn = document.querySelector(".edit-btn");
-                editBtn.addEventListener("click", () => {
-                    document.getElementById("agendamento-date").value = date;
-                    document.getElementById("agendamento-time").value = time;
-                    document.getElementById("medico-especialidade").value = specialty;
-                    document.getElementById("client-name").value = name;
-                    document.getElementById("client-phone").value = phone;
-                });
-            } else {
-                alert("Por favor, preencha todos os campos.");
-            }
-        });
-    </script>
 </body>
 </html>

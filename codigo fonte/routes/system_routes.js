@@ -80,6 +80,10 @@ router.get('/agendamento', servico.verificaAutenticacaoCliente, function(req, re
     servico.paginaAgendamento(req, res);
 });
 
+router.post('/agendamento', servico.verificaAutenticacaoCliente, function(req,res) {
+    servico.agendamentoForm(req,res);
+});
+
 
 // Exportar o router
 module.exports = router;

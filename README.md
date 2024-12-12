@@ -1,3 +1,5 @@
+-- medportal
+
 # medportal
 
 ## crie o db e depois as suas tabelas
@@ -9,6 +11,8 @@ describe usuarios;
 select * from usuarios;
 describe medico_usuarios;
 select * from medico_usuarios;
+describe agendamentos;
+select * from agendamentos;
 
 -- esse comando desativa o modo seguro, antes nao podia fazer delete sem where
 SET SQL_SAFE_UPDATES = 0;
@@ -34,5 +38,18 @@ CREATE TABLE medico_usuarios (
     especialidade VARCHAR(50) NOT NULL,
     senha VARCHAR(255) NOT NULL
 );
+
+ALTER TABLE agendamentos DROP COLUMN especialidade;
+CREATE TABLE agendamentos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    data DATE NOT NULL,
+    hora TIME NOT NULL,
+    medico_nome VARCHAR(255) NOT NULL,
+    paciente_nome VARCHAR(255) NOT NULL,
+    paciente_celular VARCHAR(11) NOT NULL,
+    status ENUM('agendado', 'cancelado', 'concluido') DEFAULT 'agendado',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 
