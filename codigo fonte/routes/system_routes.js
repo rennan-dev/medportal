@@ -75,5 +75,11 @@ router.get('/home_medico', servico.verificaAutenticacao, function(req, res) {
     servico.paginaHomeMedico(req, res);
 });
 
+//rota que somente o cliente poderá acessar
+router.get('/agendamento', servico.verificaAutenticacaoCliente, function(req, res) {
+    servico.paginaAgendamento(req, res);
+});
+
+
 // Exportar o router
 module.exports = router;

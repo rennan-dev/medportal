@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Envio de Exames - MedPortal</title>
     <link rel="stylesheet" href="./../css/styles.css">
+    <link rel="stylesheet" href="./../css/cliente.css">
 </head>
 <body>
     <header>
@@ -29,6 +30,32 @@
             <% } %>
 
         </section>
+
+        <section id="medicos-section">
+            <h2>Médicos Disponíveis</h2>
+        
+            <% if (medicos && medicos.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Médico</th>
+                            <th>Especialidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% medicos.forEach(medico => { %>
+                            <tr>
+                                <td><%= medico.nome_completo %></td>
+                                <td><%= medico.especialidade %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>Não há médicos cadastrados no momento.</p>
+            <% } %>
+        </section>
+        
     </main>
 
     <footer>

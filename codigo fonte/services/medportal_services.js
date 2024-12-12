@@ -50,10 +50,24 @@ function paginaHome(req, res) {
     const successMessage = req.session.successMessage || null;
     const userName = req.session.userName || 'Usuário';
 
-    req.session.successMessage = null;
+    // Consulta para buscar médicos e especialidades
+    const query = 'SELECT nome_completo, especialidade FROM medico_usuarios';
 
-    res.render('home', { successMessage, userName });
+    conexao.query(query, (error, results) => {
+        if (error) {
+            console.error('Erro ao buscar lista de médicos:', error);
+            return res.status(500).send('Erro ao buscar lista de médicos.');
+        }
+
+        // Passar dados dos médicos e mensagens para o EJS
+        res.render('home', {
+            successMessage,
+            userName,
+            medicos: results // Lista de médicos com nome e especialidade
+        });
+    });
 }
+
 
 
 function login(req, res) {
@@ -148,7 +162,6 @@ function cadastroMedicoForm(req, res) {
     });
 }
 
-
 function paginaHomeMedico(req, res) {
     const successMessage = req.session.successMessage || null;
     const medicoName = req.session.medicoName || 'Médico';
@@ -158,7 +171,20 @@ function paginaHomeMedico(req, res) {
     res.render('home_medico', { successMessage, medicoName });
 }
 
+function paginaAgendamento(req,res) {
+    res.render('agendamento');
+}
 
+function verificaAutenticacaoCliente(req, res, next) {
+    if (req.session && req.session.userType === 'cliente') {
+        // Usuário autenticado e é um cliente
+        return next();
+    } else {
+        // Redireciona para a página de login com mensagem de erro
+        req.flash('error', 'Você precisa estar logado como cliente para acessar essa página.');
+        res.redirect('/login');
+    }
+}
 
 // Exportar funções
 module.exports = {
@@ -171,5 +197,7 @@ module.exports = {
     login,
     verificaAutenticacao,
     cadastroMedicoForm,
-    paginaHomeMedico
+    paginaHomeMedico,
+    verificaAutenticacaoCliente,
+    paginaAgendamento
 };
