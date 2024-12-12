@@ -20,13 +20,41 @@
 
     <main>
         <section id="upload-section">
-            <h2>Home Doctor</h2>
+            <h2>Agendamentos do Dr. <%= medicoName %></h2>
 
             <% if (successMessage) { %>
                 <script type="text/javascript">
                     alert("<%= successMessage %>");
                 </script>
             <% } %>
+
+            <fieldset>
+                <legend>Lista de Agendamentos</legend>
+                <% if (agendamentos && agendamentos.length > 0) { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% agendamentos.forEach(function(agendamento) { %>
+                                <tr>
+                                    <td><%= agendamento.paciente_nome %></td>
+                                    <td><%= new Date(agendamento.data).toLocaleDateString('pt-BR') %></td>
+                                    <td><%= agendamento.hora %></td>
+                                    <td><%= agendamento.status %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>Não há agendamentos para hoje.</p>
+                <% } %>
+            </fieldset>
 
         </section>
     </main>

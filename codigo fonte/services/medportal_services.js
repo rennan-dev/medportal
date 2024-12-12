@@ -81,7 +81,6 @@ function paginaHome(req, res) {
     });
 }
 
-
 function login(req, res) {
     const { email, password } = req.body;
 
@@ -172,14 +171,55 @@ function cadastroMedicoForm(req, res) {
     });
 }
 
+//TODO fazer com que busque os agendamentos pelo id e não pelo nome.
+//Também mudar no form de agendamentos para armazenar o id do médico
 function paginaHomeMedico(req, res) {
     const successMessage = req.session.successMessage || null;
     const medicoName = req.session.medicoName || 'Médico';
+    const userId = req.session.userId; // Id do médico logado
+
+    // Debug: imprimir o nome do médico logado
+    console.log('Médico logado:', medicoName);
 
     req.session.successMessage = null;
 
-    res.render('home_medico', { successMessage, medicoName });
+    // Consultar agendamentos com base no nome do médico
+    const queryAgendamentos = 'SELECT data, hora, paciente_nome, status, medico_nome FROM agendamentos WHERE medico_nome = ?';
+
+    conexao.query(queryAgendamentos, [medicoName], (error, resultsAgendamentos) => {
+        if (error) {
+            console.error('Erro ao buscar agendamentos:', error);
+            return res.status(500).send('Erro ao buscar agendamentos.');
+        }
+
+        // Debug: imprimir os nomes dos médicos com agendamento
+        if (resultsAgendamentos.length > 0) {
+            console.log('Médicos com agendamento:');
+            resultsAgendamentos.forEach((agendamento) => {
+                console.log(agendamento.medico_nome);
+            });
+        }
+
+        // Se não houver agendamentos, mostrar mensagem
+        if (resultsAgendamentos.length === 0) {
+            return res.render('home_medico', {
+                successMessage,
+                medicoName,
+                agendamentos: [], // Lista vazia, já que não há agendamentos
+                mensagem: 'Não há agendamentos para este médico.'
+            });
+        }
+
+        // Passar dados para o template EJS com agendamentos
+        res.render('home_medico', {
+            successMessage,
+            medicoName,
+            agendamentos: resultsAgendamentos,
+            mensagem: '' // Sem mensagem de erro
+        });
+    });
 }
+
 
 function paginaAgendamento(req, res) {
     // Consulta para buscar médicos e suas especialidades
